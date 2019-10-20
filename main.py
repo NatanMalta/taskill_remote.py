@@ -25,11 +25,15 @@ def listar_processos():
     lista_processos = json.dumps(lista_processos)
     return lista_processos
 
+def encerrar_processos(nome_exe):
+    comando = "taskkill /IM " + nome_exe
+    subprocess.check_output(comando, shell=True).decode("latin-1")
+    return 0
+
 def enviar_processos_dontpad(lista_processos, url):
     data = {"text": lista_processos}
     requests.post(url, data).text
-
-
+    return 0
 
 def main(args):
     url = "http://dontpad.com/testando2015"
